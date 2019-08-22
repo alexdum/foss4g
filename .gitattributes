@@ -1,1 +1,0 @@
-ghi_annual_1980_2018.nc filter=lfs diff=lfs merge=lfs -text
