@@ -1,4 +1,5 @@
-library(raster)
+library(raster, quietly = T, warn.conflicts = F)
+library(ncdf4,quietly = T, warn.conflicts = F )
 library(ggplot2)
 
 
@@ -46,8 +47,7 @@ df.mean$anom[df.mean$season == "SON"] <- df.mean$ghi[df.mean$season == "SON"] - 
 # combine the final file for plotting
 df.final <- rbind(df.anmean, df.mean)
 
-library(ggplot2)
-ggplot(df.anmean, aes(date, anom, group = season, 
+ggplot(df.final, aes(date, anom, group = season, 
                   color = season)) +
   geom_line(size = 1, alpha = 0.8) +
   geom_point(size = 2) +
