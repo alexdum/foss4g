@@ -4,20 +4,18 @@ library(raster)
 r.seas <- brick("nc/ghi_seasons_1981_2018.nc")
 
 
-# extract index for eac seasons
-r.seas <- setZ(r.seas, as.Date(substr(names(r.seas),2,11), format = "%Y.%m.%d"))
-# compute multianual means
+# extract season from name
+season <- sort(unique(substr(names(r.seas),7,8)))
 
-index <- as.integer(substr(names(r.seas),7,8))
-r.seas.mean <- stackApply(r.seas,index, fun = mean)
-plot(r.seas.mean)
+# compute multianual mean for each season
+r.multi <- stack()
 
-show(crop(r.seas.mean)
+for (i in season) { 
+  
+  r.multi <- addLayer(r.multi, mean(r.seas[[which(substr(names(r.seas),7,8) %in% i)]]))
+}
 
+names(r.multi) <- c("DJF","MAM", "JJA", "SON")
 
-r <- brick("~/Downloads/ghi_1980_2018.nc")
+spplot(r.multi)
 
-plot(mean(r[[4:6]])-r.seas[[2]] )
-
-
-round(summary((mean(r[[4:7]])-r.seas[[2]] )))
