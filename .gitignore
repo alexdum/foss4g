@@ -8,7 +8,7 @@ foss4g_competition.docx
 .DS_Store
 nc/ghi_djf.nc
 nc/ghi_1980_2018.nc
-nc/ghi_seasons_1981_2018.nc
+ghi_seasons_1981_2018.nc
 ghi_annual_1980_2018.nc
 R/trend.slope.R
 M/era5_radiation_cache/
