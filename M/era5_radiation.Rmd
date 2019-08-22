@@ -1,10 +1,10 @@
 ---
 title: "Assessment of ERA5 data for solar resource mapping"
 output:
-  word_document: default
   html_document: 
     fig_caption: yes
     toc: yes
+  word_document: default
 always_allow_html: yes
 date: "`r Sys.Date()`"
 bibliography: ../reference.bib
@@ -300,13 +300,13 @@ The main data set used at this stage is ERA5 monthly GHI averaged data on single
 cdo -f nc -t ecmwf setgridtype,regular adaptor.mars.internal-1565286172.367593-20556-9-d39c32ec-c74b-451c-97e3-32aab88f4217.grib nc/ghi.nc
 cdo sellonlatbox,-180,180,-90,90 nc/ghi.nc nc/ghi_rot_1980_2018.nc
 # transform from J/m2 to W/m2
-cdo aexpr,"SSRD=SSRD/(3600 * 24)"  ghi_rot_1980_2018.nc  ghi_1980_2018.nc
+cdo aexpr,"SSRD=SSRD/(3600 * 24)"  nc/ghi_rot_1980_2018.nc  nc/ghi_1980_2018.nc
+# shift time axis 6 hours ahead to match correct time
+cdo shifttime,6hours nc/ghi_1980_2018.nc nc/ghi_shift_1980_2018.nc
 # compute seasonal means
-cdo -v seasavg nc/ghi_1980_2018.nc nc/ghi_seasonal_1980_2018.nc
+cdo -v seasavg nc/ghi_shift_1980_2018.nc nc/ghi_seasonal_1980_2018.nc
 # compute annual means
-cdo -v yearmean nc/ghi_1980_2018.nc nc/ghi_annual_1980_2018.nc
-# remove first time step (incomplete 1980 DJF seasons)
-cdo delete,timestep=1 nc/ghi_seasonal_1980_2018.nc nc/ghi_seasons_1981_2018.nc
+cdo -v yearmean nc/gghi_shift_1980_2018.nc nc/ghi_annual_1980_2018.nc
 ```
 
 The nonparametric Mann-Kendall trend test was employed to detect the significance of monotonic trends for each grid cell GHI data, between 1980 to 2018 [@kendall1948rank; @mann1945nonparametric]. The  MK  test  is  a  rank-basedprocedure,  especially suitable  for  non-normally distributed  data,  data  containing  outliersand nonlinear trends. The linear trends were computed for each season using the method of Theil and Sen [@thiel1950rank; @sen1968estimates]. The methods mentioned above are implemeted in the R library __EnvStats__, which provides a set of powerful functions for graphical and statistical analyses of environmental data [@EnvStats-book]. The rasters with the trends computed for each season are saved as R objects in the _RData_ directory of the project.
@@ -323,7 +323,6 @@ trend.slope <- function(y) {
   fit.results <- c(fit.results, fit$p.value)
   return(fit.results)
 }
-
 # read seasonal means
 r <- brick("../nc/ghi_seasons_1981_2018.nc")
 
@@ -360,7 +359,6 @@ library(rnaturalearth)
 library(RColorBrewer)
 library(lattice)
 
-
 countries <- ne_countries(scale = 110, type = "countries")
 countries.line <- as(countries, "SpatialLines")
 countries.sp <- list("sp.lines", countries.line, col = "#525252",lwd = 1)
@@ -372,7 +370,7 @@ p.winter[p.winter > .05 | p.winter < -.05] <- NA
 p.winter <- rasterToPoints(p.winter, spatial = T)
 signif.winter <- list("sp.points", p.winter, col = "#525252",pch = 15, cex = 0.1, alpha = 0.08, which = 1)
 
- mk.spring <- readRDS("../RData/ghi_trends_04.rds")
+mk.spring <- readRDS("../RData/ghi_trends_04.rds")
 p.spring <- mk.spring[[2]]
 p.spring[p.spring > .05 | p.spring < -.05] <- NA
 p.spring <- rasterToPoints(p.spring, spatial = T)
@@ -384,7 +382,6 @@ p.summer <- mk.summer[[2]]
 p.summer[p.summer > .05 | p.summer < -.05] <- NA
 p.summer <- rasterToPoints(p.summer, spatial = T)
 signif.summer <- list("sp.points", p.summer, col = "#525252",pch = 15, cex = 0.1, alpha = 0.08, which = 3)
-
 
 mk.fall <- readRDS("../RData/ghi_trends_10.rds")
 p.fall <- mk.fall[[2]]
@@ -448,7 +445,6 @@ df.anmean$anom <- df.anmean$ghi - mean(df.anmean$ghi)
 
 # seasonal file
 r <- brick("../nc/ghi_seasons_1981_2018.nc")
-r <- r[[-nlayers(r)]]
 # crop the data for Europe
 r.crop <- crop(r, extent(-35,60,35,72))
 # compute zonals mean
@@ -471,7 +467,6 @@ df.mean$anom[df.mean$season == "DJF"] <- df.mean$ghi[df.mean$season == "DJF"] - 
 df.mean$anom[df.mean$season == "MAM"] <- df.mean$ghi[df.mean$season == "MAM"] - mean(df.mean$ghi[df.mean$season == "MAM"])
 df.mean$anom[df.mean$season == "JJA"] <- df.mean$ghi[df.mean$season == "JJA"] - mean(df.mean$ghi[df.mean$season == "JJA"])
 df.mean$anom[df.mean$season == "SON"] <- df.mean$ghi[df.mean$season == "SON"] - mean(df.mean$ghi[df.mean$season == "SON"])
-
 
 # combine the final file for plotting
 df.final <- rbind(df.anmean, df.mean)
