@@ -1,0 +1,25 @@
+﻿id;name;latitude;longitude;elevation;country;continent;kg_class;kg_code
+CAR;Carpentras;44.083;5.059;100;France;Europe;Csa;12
+CLH;Chesapeake Light;36.905;75.713;37;USA;North America;ET;31
+DAR;Darwin;-12.425;130.891;30;Australia;Australia;Aw;4
+DRA;Desert Rock;36.626;-116.018;1007;USA;North America;BWk;8
+BON;Bondville;40.066667;-88.366667;213;USA;North America;Cfa;9
+BOS;Boulder;40.125;-105.237;1689;USA;North America;BSk;6
+BRB;Brasilia;-15.601;-47.713;1023;Brazil;South America;Aw;4
+CAB;Cabauw;51.9711;4.9267;0;The Netherlands;Europe;Cfb;10
+CNR;Cener;42.816;-1.601;471;Spain;Europe;Cfb;10
+E13;Southern Great Plains;36.605;-97.485;318;USA;North America;Cfa;9
+FPE;Fort Peck;48.316667;-105.1;634;USA;North America;BSk;6
+FUA;Fukuoka;33.5822;130.3764;3;Japan;Asia;Cfa;9
+GCR;Goodwin Creek;34.2547;-89.8729;98;USA;North America;Cfa;9
+GVN;Georg von Neumayer;-70.65;-8.25;42;Dronning Maud Land;Antarctica;Ocean;32
+KWA;Kwajalein;8.72;167.731;10;Marshall Islands;Oceania;Ocean;32
+LER;Lerwick;60.13891;-1.18466;80;United_Kingdom;Europe;Cfb;10
+NYA;Ny-?lesund;78.925;11.93;11;Spitsbergen;Europe;ET;31
+PAL;Palaiseau, SIRTA Observatory;48.713;2.208;156;France;Europe;Cfb;10
+PSU;Rock Springs;40.72;-77.933333;376;USA;North America;Cfb;10
+PTR;Petrolina;-9.068;-40.319;387;Brazil;South America;BSh;5
+SMS;S?o Martinho da Serra;-29.442783;-53.82305;489;Brazil;South America;Cfa;9
+SPO;South Pole;-89.983;-24.799;2800;South Pole;Antarctica;EF;30
+SYO;Syowa;-69.005;39.589;18;Cosmonaut Sea;Antarctica;EF;30
+TAT;Tateno;36.0581;140.1258;25;Japan;Asia;Cfa;9
