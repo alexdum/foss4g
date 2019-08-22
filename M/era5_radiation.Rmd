@@ -1,10 +1,10 @@
 ---
 title: "Assessment of ERA5 data for solar resource mapping"
 output:
+  word_document: default
   html_document: 
     fig_caption: yes
     toc: yes
-  word_document: default
 always_allow_html: yes
 date: "`r Sys.Date()`"
 bibliography: ../reference.bib
@@ -28,10 +28,9 @@ sum.ind <- table_nums("sum.ind","Summary statistic for ERA5 estimates and BSRN m
 fig_nums <- captioner(prefix = "Figure", levels = 1)
 rad.net <- fig_nums("rad.net", "Selected radiometric staions")
 rad.bwplot <- fig_nums("rad.bwplot", "Box-and-whisker plots of the daily GHI (W/m²) obtained from BSRN archives (2006-2015). The filled dots denote the median, solid boxes range from the lower to the upper quartile, and dashed whiskers show the data range. Data that are further than 1.5 times the interquartile range from the nearest quartile are shown as open bullets. The stations are ordered by latitude and altitude.")
-
 rad.matrix <- fig_nums("rad.matrix", "Matrix of scatterplots between reference dataset and the model's estimates (W/m²) for all the stations and climate zones")
-
 plot.trends <- fig_nums("plot.trends", "Trends in seasonal GHI. Gray-shaded areas in the plots highlight the grid cells presenting significant decreasing or increasing trends at 95% level (two tailed).")
+plot.anomalies <- fig_nums("plot.anomalies", "Seasonal and annual mean anomaly time series of ERA5 GHI [$W·m^{-2}$]" )
 
 ```
 
@@ -289,7 +288,7 @@ stats[,3:8] <- round(stats[,3:8], 3)
 kable(stats, caption = sum.ind)
 
 
-scatterPlot(tab, y = "era5_ghi", x = "bsrn_ghi", type = "KG", xlab = "BSRN GHI [W/m²]", ylab = "ERA5 GHI [W/m²]", linear = T, smooth = T)
+scatterPlot(tab, y = "era5_ghi", x = "bsrn_ghi", type = "KG", xlab = "BSRN GHI [W/m²]", ylab = "ERA5 GHI [W/m²]", linear = T, smooth = F)
 ```
 
 
@@ -355,7 +354,7 @@ The maps wit the trende were ploted ussing _spplot()_ function from __sp__ R pac
 
 The  spatial  distribution  of  the  seasonal significant trends (1981 - 2018) is  presented  figure `r fig_nums("plot.trends", display = "num")` and briefly discussed in the following paragraph. The spatial variability of the trends in the different seasons is quite large. The positive significant trends (shades of red color palette) were computed for the Spring and the Summer for Europe, Central Africa, and for some areas in South America and the western part of the USA. Significant GHI decreasing trends (shades of blue color palette) occur all the seasons in the oceanic areas of equatorial belt, as well as in the Arctic Regions.
 
-```{r plot_trends, echo=TRUE, fig.cap=plot.trends, fig.height=6, fig.width=10}
+```{r plot_trends, echo=TRUE, fig.cap=plot.trends, fig.height=6, fig.width=10, cache=T}
 library(raster, quietly = T, warn.conflicts = F)
 library(rnaturalearth)
 library(RColorBrewer)
@@ -421,7 +420,71 @@ p1 <- spplot(slopes,
 print(p1)
 ```          
             
+The anomaly analysis was performed for a spatial domain covering Europe and its vicinity (the longitude range between -35°E to 60°E and latitude range between 35°N to 72°N). The NetCDF data was subsetted using the _crop_ function from __raster__ R package.
 
+The evolution of the annual and seasonal time series anomalies are shown in the figure `r fig_nums("plot.anomalies", display = "num")`. The anomalies computed after the year 2000for the Spring and the Summer are positive for almost all the years, which is in agreement with the previous analysis when positive significant trends were detected for the two seasons. The pattern of the annual anomalies confirms the global brightening phenomena which occur at the end of the 80s and which was previously documented from observational data [@wild2009global].
+
+
+```{r plot_anomalies, echo=TRUE, fig.cap=plot.anomalies, fig.height=6, fig.width=10,cache=T}
+
+library(raster, quietly = T, warn.conflicts = F)
+library(ncdf4,quietly = T, warn.conflicts = F )
+library(ggplot2)
+
+
+# anual file
+r.an <- brick("../nc/ghi_annual_1980_2018.nc")
+# crop the data for Europe
+# across the longitude range -35°E to 60°E and latitude range 35°N to 72°N
+r.ancrop <- crop(r.an, extent(-35,60,35,72))
+# compute zonals mean
+z.anmean <- cellStats(r.ancrop, stat = mean)
+# create data frame (table for ploting)
+df.anmean <- data.frame(season = substr(names(z.anmean), 7,8), 
+                      date = as.Date(paste0(substr(names(z.anmean), 2,5),"-01-01")),
+                      ghi = z.anmean, stringsAsFactors = F)
+df.anmean$season <- "Annual"
+df.anmean$anom <- df.anmean$ghi - mean(df.anmean$ghi)
+
+# seasonal file
+r <- brick("../nc/ghi_seasons_1981_2018.nc")
+r <- r[[-nlayers(r)]]
+# crop the data for Europe
+r.crop <- crop(r, extent(-35,60,35,72))
+# compute zonals mean
+z.mean <- cellStats(r.crop, stat = mean)
+
+# create data frame (table for ploting)
+df.mean <- data.frame(season = substr(names(z.mean), 7,8), 
+                      date = as.Date(paste0(substr(names(z.mean), 2,5),"-01-01")),
+                      ghi = z.mean, stringsAsFactors = F)
+
+
+# rename season
+df.mean$season[df.mean$season == "01"] <- "DJF"
+df.mean$season[df.mean$season == "04"] <- "MAM"
+df.mean$season[df.mean$season == "07"] <- "JJA"
+df.mean$season[df.mean$season == "10"] <- "SON"
+
+# comnpute anomalies relative to the mean
+df.mean$anom[df.mean$season == "DJF"] <- df.mean$ghi[df.mean$season == "DJF"] - mean(df.mean$ghi[df.mean$season == "DJF"])
+df.mean$anom[df.mean$season == "MAM"] <- df.mean$ghi[df.mean$season == "MAM"] - mean(df.mean$ghi[df.mean$season == "MAM"])
+df.mean$anom[df.mean$season == "JJA"] <- df.mean$ghi[df.mean$season == "JJA"] - mean(df.mean$ghi[df.mean$season == "JJA"])
+df.mean$anom[df.mean$season == "SON"] <- df.mean$ghi[df.mean$season == "SON"] - mean(df.mean$ghi[df.mean$season == "SON"])
+
+
+# combine the final file for plotting
+df.final <- rbind(df.anmean, df.mean)
+
+ggplot(df.final, aes(date, anom, group = season, 
+                  color = season)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 2) +
+  scale_colour_manual(values = c("black","#3182bd", "#800026","#feb24c", "#addd8e")) +
+  xlab("Year") +
+  ylab(bquote('Anomaly GHI ['*'W ·'~m^-2*']')) +
+  theme(legend.title = element_blank())
+```
 
 ## Solar resource maps generation 
 
