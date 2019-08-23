@@ -41,11 +41,15 @@ annual.mean <- fig_nums("annual.mean", "Average annual mean of GHI ($W·m^{-2}$)
 
 The project is structured as follows:
 
-- _M_ folder containing the RMarkdown source code and HTML and DOCX files converted from Rmd file;
+- _M_ folder containing the RMarkdown source code and HTML and DOCX files converted from Rmd file (era5_radiation.docx, era5_radiation.html are the documents);
 - _RDate_ folder where R objects are stored;
 - _tabs_ folder which contain metadata of the stations and the solar global radiation data extracted from ERA5 model and BSRN network;
 - _sh_ folder with the ksh scripts run on the ecgate cluster;
 - _R_ folder with R language script.
+- _kml_ final maps available in KML file format
+- _geotiff_ GeoTIFF files with the raster in WGS84 projectiion, at the native ERA5 sptial resolution.
+
+All the R code available in the _M/era5_radiation.Rmd_ document is fully reproducible, with the condition that the project's folders structure must be the same as the project's github repository (https://github.com/alexdum/foss4g).
 
 ## Input dataset
 
