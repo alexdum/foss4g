@@ -42,6 +42,11 @@ seas.meange <- fig_nums("seas.meange", "Average seasonal mean of GHI ($W·m^{-2}
 
 ## Introduction
 
+The objective of this work is to demonstrate if the ERA5 reanalysis could be used to provide valuable meteorological information (surface solar radiation) for the areas around the globe, in situations when ground-based measurements are not available. 
+
+The main outcomes consist of delivering the worldwide solar radiation resource maps, at annual and seasonal scale, at a reasonable spatial resolution (0.28º). The accuracy of the solar radiation information available from ERA5 was assessed using observations of the best possible quality for shortwave surface radiation fluxes (BSRN network).
+
+The variability and trend analysis were performed to identify how stable is the amount of surface solar radiation and how solar radiation varies over the past decades.
 
 The project is structured as follows:
 
@@ -55,7 +60,7 @@ The project is structured as follows:
 
 All the R code available in the _M/era5_radiation.Rmd_ document is fully reproducible, with the condition that the project's folders structure should be the same as the one on project's github repository (https://github.com/alexdum/foss4g). The repository must be cloned locally. The CDO code is not fully reproducible due to the large size of the files processed which can not be made available through the GitHub repository.
 
-This report was generated in HTML and DOCX format (see: https://github.com/alexdum/foss4g/tree/master/M) with the open-source application RMarkdown (https://rmarkdown.rstudio.com/), which provides an environment for creating data science documents that are fully reproducible using multiple programming languages (R, Python, SQL). In the document is shown the code used for obtaining the results. This document contains the source code used for obtaining the results. The results are either images or graphs, that are displayed in the report, or files that are saved in the project's folders structure. 
+This report was generated in HTML and DOCX format (see: https://github.com/alexdum/foss4g/tree/master/M) with the open-source application RMarkdown (https://rmarkdown.rstudio.com/), which provides an environment for creating data science documents that are fully reproducible using multiple programming languages (R, Python, SQL). This document contains also the source code used for obtaining the results. The results are either images or graphs, that are displayed in the report, or files that are saved in the project's folders structure. 
 
 ## Input dataset
 
@@ -66,8 +71,8 @@ This report was generated in HTML and DOCX format (see: https://github.com/alexd
 
 ### Baseline Surface Radiation Network
 
-- consist of 24 radiometric stations located in in contrasting climatic zones;
-- solar and atmospheric radiation measurments;
+- consist of 24 radiometric selected stations located in in contrasting climatic zones;
+- the stations provide solarradiation and atmospheric measurments;
 - equipped with instruments of the highest available accuracy and with high time resolution;
 - the BSRN datasets were retrieved via PANGAEA portal (https://bsrn.awi.de/data/data-retrieval-via-pangaea/);
 - selected hourly data from the stations that have observations available between 2006 to 2015 (Figure `r fig_nums("rad.net", display = "num")`, Table `r table_nums("rad.meta", display = "num")`);
@@ -119,7 +124,7 @@ bwplot(id~ghi, data = tabf, xlab = "GHI (W/m^2)",col = "red",
     - for validation: hourly data obtained directly from the ECMWF Meteorological Archival and Retrieval System (MARS), via ecgate cluster (2006-2015) (294.89 GB on disk);
     - for climate trend and variability analysis and solar resource mapping: monthly data from C3S Climate Data Store (1980-2018) (1.96 GB on disk).
 
-Due to a large amount of data necessary to be processed at the validation stage, hourly ERA5 data was extracted for the years 2006 to 2015 via ecgate cluster (https://www.ecmwf.int/en/computing/our-facilities/ecgate) by using a retrieve script generated from the links available on the Mars Catalogue:
+Due to a large amount of data necessary to be processed at the validation stage, hourly ERA5 data was extracted for the years 2006 to 2015 via ecgate cluster (https://www.ecmwf.int/en/computing/our-facilities/ecgate) by using a retrieve script generated from the links available on the Mars Catalogue (https://apps.ecmwf.int/mars-catalogue/):
 ```console
 #!/bin/ksh -x
 #SBATCH --qos=normal
@@ -225,7 +230,7 @@ for (i in 1:nrow(tab)) {
 saveRDS(tabf, file = "../RData/ghi_bsrn_era5.rds")
 ```
 
-First, the mean bias error (MBE), mean absolute error (MAE), and the root relative squared error (RRSE) were used as performance statistics indicators for the ERA4 estimates. The metrics were computed with the functions implemented in R _Metrics_ library [@hamner2018metrics].
+First, the mean bias error (MBE), mean absolute error (MAE), and the root relative squared error (RRSE) were used as performance statistics indicators for the ERA5 estimates. The metrics were computed with the functions implemented in R __Metrics__ library [@hamner2018metrics].
 
 <!-- $$ -->
 <!-- MBE=\frac{1}{N}\sum_{i=1}^N (Os_{i}-Ps_{i}) -->
@@ -240,7 +245,7 @@ First, the mean bias error (MBE), mean absolute error (MAE), and the root relati
 
 The indicators were computed for all the station by Köppen-Geiger climate classification zones and by seasons. The performance metrics of the reanalysis products are summarized in  Table `r table_nums("kg.ind", display = "num")` and  Table `r table_nums("seas.ind", display = "num")`. Overall, the estimates reported by ERA5 agree with data obtained from BSRN stations. As regarding these indicators, we can notice that the model performed best for BW climate zones, and worst for the tropical climate zones. As concerning the performance of the model by season, there are some significant differences between cold and warm seasons, in the southern hemisphere. The summary statistics computed for both datasets reveal us that generally, ERA5 model tends to underestimate the extreme values as well as the variability of the analyzed parameter, regardless of the climate zone (Table `r table_nums("sum.ind", display = "num")`). 
 
-By looking at the scatterplots and R-squared (Figure `r fig_nums("rad.matrix", display = "num")`), some differences between the climate zones may be observed, but the agreement between the two analyzed datasets is quite reasonable. The matrix of scatterplots was constructed with the help of the _scatterPlot()_ function form the openair R package [@carslaw2012openair].
+By looking at the scatterplots and R-squared (Figure `r fig_nums("rad.matrix", display = "num")`), some differences between the climate zones may be observed, but the agreement between the two analyzed datasets is quite reasonable. The matrix of scatterplots was constructed with the help of the _scatterPlot()_ function form the __openair__ R package [@carslaw2012openair].
 
 ```{r indicators, echo=TRUE, fig.cap=rad.matrix, fig.height=6, fig.width=10}
 library(seas, quietly = T)
@@ -614,7 +619,7 @@ for (i in 1:nlayers(r.multi)) {
 ```
 
 
-In the same manner was plotted the mean annual rasters for the two periods of interest (1980-2018, 2009-2019). Even at an annual scale, there is just a slight variation regarding the spatial distribution of solar radiation computed for the periods of interest.
+In the same manner were plotted the mean annual rasters for the two periods of interest (1980-2018, 2009-2019). Even at an annual scale, there is just a slight variation regarding the spatial distribution of solar radiation computed for the periods of interest.
 
 The maps were also saved as GeoTIFF and KML files using the same methods and functions applied for the seasonal maps.
 
@@ -695,7 +700,7 @@ The ERA5 Surface solar radiation downwards hourly and monthly data have been use
 
 Functions from open-source software tools were employed to process the reanalysis and ground-based observational datasets, to validate the estimations from the model, perform the trend and variability analysis, and to temporally aggregate the NetCDF files and to map the results.
 
-The comparison between the two datasets revealed that ERA5 provides quite reliable estimates. The positive significantly trends were detected for Europe, Central Africa, and some areas in South America and the western part of the USA in the Spring and the Summer. The final solar radiation maps were obtined by temporarly aggregating ERA5 data at seasonal and annual scale. The final product was saved as PNG images (inserted in HTML and DOCX files), as well as stand-alone raster GeoTIFF and KML file format.
+The comparison between the two datasets revealed that ERA5 provides quite reliable estimates. The positive significantly trends were detected for Europe, Central Africa, and some areas in South America and the western part of the USA in the Spring and the Summer. The final solar radiation maps were obtined by temporarly aggregating ERA5 data at seasonal and annual scales. The final products were saved as PNG images (inserted in HTML and DOCX files), as well as stand-alone raster GeoTIFF and KML files format.
 
 In this work, we demonstrate that open-source tools (CDO and R language) provide functionalities to manipulate large files, and perform various tasks to obtain reliable products that can be used for climate change and variability assessment, as well as for climate monitoring. The applications used in this work offer the possibility to easily perform repetitive procedures by using user-written scripts, and to write and use your own functions.
 
