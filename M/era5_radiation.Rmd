@@ -49,13 +49,13 @@ The project is structured as follows:
 - _RDate_ folder where R objects are stored;
 - _tabs_ folder which contain metadata of the stations and the solar global radiation data extracted from ERA5 model and BSRN network;
 - _sh_ folder with the ksh scripts run on the ecgate cluster;
-- _R_ folder with R language script.
-- _kml_ final maps available in KML file format
+- _R_ folder with R language scripts;
+- _kml_ final maps available in KML file format;
 - _geotiff_ GeoTIFF files with the raster in WGS84 projectiion, at the native ERA5 sptial resolution.
 
-All the R code available in the _M/era5_radiation.Rmd_ document is fully reproducible, with the condition that the project's folders structure must be the same as the project's github repository (https://github.com/alexdum/foss4g). The repository must be cloned locally. The CDO code is not fully reproducible due to the large size of the files processed which can not be made available through the GitHub repository.
+All the R code available in the _M/era5_radiation.Rmd_ document is fully reproducible, with the condition that the project's folders structure should be the same as the one on project's github repository (https://github.com/alexdum/foss4g). The repository must be cloned locally. The CDO code is not fully reproducible due to the large size of the files processed which can not be made available through the GitHub repository.
 
-This report was generated in HTML and DOCX format (see: https://github.com/alexdum/foss4g/tree/master/M) with the open-source application RMarkdown (https://rmarkdown.rstudio.com/), which provides an environment for creating data science documents that are fully reproducible using multiple programming languages (R, Python, SQL). In the document is shown the cod used for obtaining the results. The document contains the code used for obtaining the results. The results are either images or graphs, that are displayed in the report, or files that are saved in the project's folders structure. 
+This report was generated in HTML and DOCX format (see: https://github.com/alexdum/foss4g/tree/master/M) with the open-source application RMarkdown (https://rmarkdown.rstudio.com/), which provides an environment for creating data science documents that are fully reproducible using multiple programming languages (R, Python, SQL). In the document is shown the code used for obtaining the results. This document contains the source code used for obtaining the results. The results are either images or graphs, that are displayed in the report, or files that are saved in the project's folders structure. 
 
 ## Input dataset
 
@@ -71,7 +71,7 @@ This report was generated in HTML and DOCX format (see: https://github.com/alexd
 - equipped with instruments of the highest available accuracy and with high time resolution;
 - the BSRN datasets were retrieved via PANGAEA portal (https://bsrn.awi.de/data/data-retrieval-via-pangaea/);
 - selected hourly data from the stations that have observations available between 2006 to 2015 (Figure `r fig_nums("rad.net", display = "num")`, Table `r table_nums("rad.meta", display = "num")`);
-- we considered only the days which have at least 90 % of available radiation data for each day.
+- we considered only the days which have at least 90% of available radiation data for each day.
 
 The sub-hourly raw values were averaged to daily values, after they were quality checked using the algorithm Solarpos without refraction as implemented in BSRN Toolbox [@schmithusen2012bsrn].
 
@@ -83,7 +83,7 @@ rad.network <- read.table("../tabs/rad_network.csv", sep = ";", header = T)
 kable(rad.network, caption = rad.meta)
 coordinates(rad.network) <- ~longitude + latitude
 proj4string(rad.network) <- "+init=epsg:4326"
-mapview(rad.network, layer.name = 'Radiometric network')
+mapview(rad.network, layer.name = 'Radiometric network used in the study')
 ```
 
 
@@ -273,8 +273,7 @@ colnames(ti.kg) <- indicators.kg$KG
 
 kable(ti.kg ,caption = kg.ind)
 
-# compute indiccators by seasons
-# compute indicators by seasons
+# compute indicators by seasons and hemisphere
 indicators.seas <- tab %>% group_by(season, hemisphere) %>% 
   summarise(ME = round(bias(bsrn_ghi, era5_ghi), 3), 
             MAE = round(mae(bsrn_ghi, era5_ghi), 3),
@@ -321,8 +320,7 @@ cdo -v seasavg nc/ghi_shift_1980_2018.nc nc/ghi_seasonal_1980_2018.nc
 # compute annual means
 cdo -v yearmean nc/gghi_shift_1980_2018.nc nc/ghi_annual_1980_2018.nc
 ```
-
-The nonparametric Mann-Kendall trend test was employed to detect the significance of monotonic trends for each grid cell GHI data, between 1980 to 2018 [@kendall1948rank; @mann1945nonparametric]. The  MK  test  is  a  rank-based procedure, especially suitable  for  non-normally distributed  data. The linear trends were computed for each season using the method of Theil and Sen [@thiel1950rank; @sen1968estimates]. The methods mentioned above are implemeted in the R library __EnvStats__, which provides a set of powerful functions for graphical and statistical analyses of environmental data [@EnvStats-book]. The rasters with the trends computed for each season are saved as R objects in the _RData_ directory of the project.
+The nonparametric Mann-Kendall trend test was employed to detect the significance of monotonic trends for each grid cell of the GHI data, between 1980 to 2018 [@kendall1948rank; @mann1945nonparametric]. The  MK  test  is  a  rank-based procedure, especially suitable  for  non-normally distributed  data. The linear trends were computed for each season using the method of Theil and Sen [@thiel1950rank; @sen1968estimates]. The methods mentioned above are implemeted in the R library __EnvStats__, which provides a set of powerful functions for graphical and statistical analyses of environmental data [@EnvStats-book]. The rasters with the trends computed for each season are saved as R objects in the _RData_ directory of the project.
 
 ```{r trends, echo=TRUE, cache=T}
 library(raster, quietly = T, warn.conflicts = F)
@@ -365,7 +363,7 @@ for (i in 1:length(mid.seasons)) {
 
 The maps with the trende were ploted ussing _spplot()_ function from __sp__ R package [@bivand2013]. The world country borders were obtained from the __rnaturalearth__ dataset [@andy2017], which contains free for use in any type of project World borders dataset available at 1:10m, 1:50m, and 1:110 million scales.
 
-The  spatial  distribution  of  the  seasonal significant trends (1981 - 2018) is  presented  figure `r fig_nums("plot.trends", display = "num")` and briefly discussed in the following paragraph. The spatial variability of the trends in the different seasons is quite large.  The positive significantly increased (shades of red color palette) were computed for the Spring and the Summer for Europe, Central Africa, and for some areas in South America and the western part of the USA. Significant GHI decreasing trends (shades of blue color palette) occur all the seasons in the oceanic areas of equatorial belt, as well as in the Arctic Regions. The accurate estimation of changes of solar radiation across the World may be useful for designing and operating appropriate solar power plants.
+The  spatial  distribution  of  the  seasonal significant trends (1981 - 2018) is  presented  figure `r fig_nums("plot.trends", display = "num")` and briefly discussed in the following paragraph. The spatial variability of the trends in the different seasons is quite large.  The positive significantly increased (shades of red color palette) were computed for the Spring and the Summer for Europe, Central Africa, and for some areas in South America and the western part of the USA. Significant GHI decreasing trends (shades of blue color palette) occur all the seasons in the oceanic areas of equatorial belt, as well as in the Arctic Regions. It is also worth noting that accurate estimation of changes of solar radiation across the World may be useful for designing and operating appropriate solar power plants.
 
 
 
@@ -499,11 +497,11 @@ ggplot(df.final, aes(date, anom, group = season,
 
 ## Solar resource maps generation 
 
-The final maps were obtained by averaging the annual and seasonal data using two periods of reference: 1980-2018 (historical) and 2009-2018 (actual). For plotting the static maps, it was used the same function applied for trends map (_spplot_). _colorRampPalette()_ function was employed to interpolate de 9-class YlOrRd sequential scheme from ColorBrewer application (http://colorbrewer2.org), with light colors assigned for low data values to dark colors for high data values. ColorBrewer is an online tool, also implemented in R environment [@neuwirth2014], designed to help people select good color schemes for maps and other graphics.
+The final maps were obtained by averaging the annual and seasonal data using two periods of reference: 1980-2018 (historical) and 2009-2018 (actual). For plotting the static maps, it was used the same function applied for trends map (_spplot_). _colorRampPalette()_ function was employed to interpolate the 9-class YlOrRd sequential scheme from ColorBrewer application (http://colorbrewer2.org), with light colors assigned for low data values to dark colors for high data values. ColorBrewer is an online tool, also implemented in R environment [@neuwirth2014], designed to help people select good color schemes for maps and other graphics.
 
 The seasonal rasters files were also saved as KML files, and as GeoTIFF files (see folders _kml_ and _geotiff_ from the project). The conversion to KML files was performed with the _plotKML()_ function from the R library with the same name.
 
-The global pattern of GHI spatial distributions does not significantly change over the years (figures `r fig_nums("seas.mean1", display = "num")` and `r fig_nums("seas.mean2", display = "num")`). Seasonal variation are directly influenced by the tilt of the Earth’s axis of rotation, which causes changes in solar radiation received by locations on Earth (maximum GHI values are estimated for the cold seasons).
+The global pattern of GHI spatial distributions does not significantly change over the years (figures `r fig_nums("seas.mean1", display = "num")` and `r fig_nums("seas.mean2", display = "num")`). Seasonal variation are directly influenced by the tilt of the Earth’s axis of rotation, which causes changes in solar radiation received by locations on Earth (maximum GHI values are estimated for the warm seasons).
 
 ```{r plot_seasons, echo=TRUE, fig.cap=c(seas.mean1,seas.mean2), fig.height=9, fig.width=13, cache=T}
 library(raster, quietly = T, warn.conflicts = F)
