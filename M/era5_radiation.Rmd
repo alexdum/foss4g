@@ -37,7 +37,7 @@ plot.anomalies <- fig_nums("plot.anomalies", "Seasonal and annual mean anomaly t
 seas.mean1 <- fig_nums("seas.mean1", "Average seasonal mean of GHI ($W·m^{-2}$), period 1980 - 2018" )
 seas.mean2 <- fig_nums("seas.mean2", "Average seasonal mean of GHI ($W·m^{-2}$), period 2009 - 2018" )
 annual.mean <- fig_nums("annual.mean", "Average annual mean of GHI ($W·m^{-2}$), period 1980 - 2018 and 2009 - 2018" )
-
+seas.meange <- fig_nums("seas.meange", "Average seasonal mean of GHI ($W·m^{-2}$), period 2009 - 2018 (from KML file)" )
 ```
 
 ## Introduction
@@ -684,6 +684,8 @@ for (i in 1:nlayers(rf)) {
 ```
 
 The seasonal and annual KML files could be opened in GoogleMaps or using the GgooleEarth application.
+
+![Figure 9: Average seasonal mean of GHI ($W·m^{-2}$), period 2009 - 2018 (from KML file)](../kml/GE_exemplu.jpg)
 
 ## Conclusions
 
