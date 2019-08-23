@@ -91,9 +91,11 @@ setwd("/Users/alexandrudumitrescu/Documents/clima/2019/foss4g/kml")
 
 for (i in 1:nlayers(r.multi2)) {
 
-plotKML(r.multi2[[i]], z.lim = c(0,400), colour_scale = SAGA_pal[[1]], alpha = 0.7,
+  suppressMessages(
+    plotKML(r.multi2[[i]], z.lim = c(0,400), colour_scale = SAGA_pal[[1]], alpha = 0.7,
         file.name = paste0(names(r.multi2)[i],"_2009_2018.kml"),
-        open.kml = F)
+        open.kml = F, verbose = F)
+  )
 }
 
 for (i in 1:nlayers(r.multi)) {
