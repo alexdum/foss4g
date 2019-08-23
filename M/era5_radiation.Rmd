@@ -44,11 +44,11 @@ seas.meange <- fig_nums("seas.meange", "Average seasonal mean of GHI ($W·m^{-2}
 
 The objective of this work is to demonstrate if the ERA5 reanalysis could be used to provide valuable meteorological information (surface solar radiation) for the areas around the globe, in situations when ground-based measurements are not available. 
 
-The main outcomes consist of delivering the worldwide solar radiation resource maps, at annual and seasonal scale, at a reasonable spatial resolution (0.28º). The accuracy of the solar radiation information available from ERA5 was assessed using observations of the best possible quality for shortwave surface radiation fluxes (BSRN network).
+ The accuracy of the solar radiation information available from ERA5 was assessed using observations of the best possible quality for shortwave surface radiation fluxes (BSRN network). The main outcomes consist of delivering the worldwide solar radiation resource maps, at annual and seasonal scale, at a reasonable spatial resolution (0.28º).
 
 The variability and trend analysis were performed to identify how stable is the amount of surface solar radiation and how solar radiation varies over the past decades.
 
-The project is structured as follows:
+The project is available at the following repository https://github.com/alexdum/foss4g, and is structured as follows:
 
 - _M_ folder containing the RMarkdown source code and HTML and DOCX files converted from Rmd file (era5_radiation.docx, era5_radiation.html are the documents);
 - _RDate_ folder where R objects are stored;
