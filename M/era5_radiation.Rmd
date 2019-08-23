@@ -520,7 +520,6 @@ countries.sp <- list("sp.lines", countries.line, col = "#525252",lwd = 1)
 # load seasonal data
 r.seas <- brick("../nc/ghi_seasons_1981_2018.nc")
 
-
 # extract season from name
 season <- sort(unique(substr(names(r.seas),7,8)))
 
@@ -593,8 +592,6 @@ for (i in 1:nlayers(r.multi2)) {
 for (i in 1:nlayers(r.multi)) {
   writeRaster(r.multi[[i]], paste0("../geotiff/",names(r.multi)[i],"_1980_2018.tif"), overwrite = T)
 }
-
-
 # write kml files
 setwd("/Users/alexandrudumitrescu/Documents/clima/2019/foss4g/kml")
 
@@ -617,10 +614,9 @@ for (i in 1:nlayers(r.multi)) {
 ```
 
 
-In the same manner was plotted the mean annual rasters for the two periods of interest (1980-2018, 2009-2019). Even in this case at a global scale, there is just a slight variation regarding the spatial distribution of solar radiation computed for the period of interests.
+In the same manner was plotted the mean annual rasters for the two periods of interest (1980-2018, 2009-2019). Even at an annual scale, there is just a slight variation regarding the spatial distribution of solar radiation computed for the periods of interest.
 
-The maps were also saved as GeoTIFF and KML files using the same methods applied for the seasonal maps.
-
+The maps were also saved as GeoTIFF and KML files using the same methods and functions applied for the seasonal maps.
 
 
 ```{r plot_annual, echo=TRUE, fig.cap=c(annual.mean), fig.height=10, fig.width=12, cache=T}
@@ -674,9 +670,6 @@ plot(p1)
 for (i in 1:nlayers(rf)) {
   writeRaster(rf[[i]], paste0("../geotiff/Annual_",gsub("X", "",names(rf)[i]),"_2018.tif"), overwrite = T)
 }
-
-
-
 # write kml files
 setwd("/Users/alexandrudumitrescu/Documents/clima/2019/foss4g/kml")
 
@@ -689,6 +682,8 @@ for (i in 1:nlayers(rf)) {
 }
 
 ```
+
+The seasonal and annual KML files could be opened in GoogleMaps or using the GgooleEarth application.
 
 ## Conclusions
 
