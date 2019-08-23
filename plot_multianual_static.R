@@ -29,9 +29,9 @@ r.multi[] <- round(getValues(r.multi), 1)
 # # check range of values
 # summary(brick(r.multi))
 # find the preaks with pretty
-brks <- classIntervals(as.vector(getValues(r.multi)), n = 9, style = "pretty")
-cols <- colorRampPalette(brewer.pal(length(brks$brks),"YlOrRd"))
-
+brks <- classIntervals(as.vector(getValues(r.multi)), n = 14, style = "pretty")
+rds <- colorRampPalette(brewer.pal(9,"YlOrRd"))
+cols <- rds(length(brks$brks))
 
 p1 <- spplot(r.multi, sp.layout = list(countries.sp), scales = list(draw = TRUE, cex = 0.8),
              col.regions = cols,cuts = length(brks$brks) - 1,at = brks$brks,
