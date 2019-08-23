@@ -49,8 +49,7 @@ The project is structured as follows:
 - _kml_ final maps available in KML file format
 - _geotiff_ GeoTIFF files with the raster in WGS84 projectiion, at the native ERA5 sptial resolution.
 
-All the R code available in the _M/era5_radiation.Rmd_ document is fully reproducible, with the condition that the project's folders structure must be the same as the project's github repository (https://github.com/alexdum/foss4g).
-
+All the R code available in the _M/era5_radiation.Rmd_ document is fully reproducible, with the condition that the project's folders structure must be the same as the project's github repository (https://github.com/alexdum/foss4g). The repository must be cloned locally.
 ## Input dataset
 
 - ERA5 Surface solar radiation downwards [J/m2] hourly accumulate parameter will be used as the main dataset in this work:
