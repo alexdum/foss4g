@@ -64,7 +64,7 @@ This report was generated in HTML and DOCX format (see: https://github.com/alexd
 
 ## Input dataset
 
-- ERA5 Surface solar radiation downwards [J/m2] hourly accumulate parameter will be used as the main dataset in this work:
+- ERA5 global horizontal irradiance (GHI) estimates are used as the main dataset in this work;
 
 - The reference dataset will consist of solar radiation measurements obtained from the Baseline Surface Radiation Network (BSRN - https://bsrn.awi.de/).
 
@@ -78,7 +78,7 @@ This report was generated in HTML and DOCX format (see: https://github.com/alexd
 - selected hourly data from the stations that have observations available between 2006 to 2015 (Figure `r fig_nums("rad.net", display = "num")`, Table `r table_nums("rad.meta", display = "num")`);
 - we considered only the days which have at least 90% of available radiation data for each day.
 
-The sub-hourly raw values were averaged to daily values, after they were quality checked using the algorithm Solarpos without refraction as implemented in BSRN Toolbox [@schmithusen2012bsrn].
+The sub-hourly global horizontal irradiance (GHI) raw values were averaged to daily values, after they were quality checked using the algorithm Solarpos without refraction as implemented in BSRN Toolbox [@schmithusen2012bsrn].
 
 ```{r radiometric, echo=TRUE, fig.cap=rad.net}
 library(mapview)
@@ -119,7 +119,8 @@ bwplot(id~ghi, data = tabf, xlab = "GHI (W/m^2)",col = "red",
 - provide hourly meteorological data from 1979 onwards;
 - spatial resolution approximate 30 km grid;
 - open access and free to download for all uses, including commercial use through the C3S Climate Data Store (https://cds.climate.copernicus.eu);
-- more info: https://climate.copernicus.eu/climate-reanalysis.
+- more info: https://climate.copernicus.eu/climate-reanalysis;
+- the variable used is the surface solar radiation downwards, which is part of the forecast fields;
 - two subset used:
     - for validation: hourly data obtained directly from the ECMWF Meteorological Archival and Retrieval System (MARS), via ecgate cluster (2006-2015) (294.89 GB on disk);
     - for climate trend and variability analysis and solar resource mapping: monthly data from C3S Climate Data Store (1980-2018) (1.96 GB on disk).
